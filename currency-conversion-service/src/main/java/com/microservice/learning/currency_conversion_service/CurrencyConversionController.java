@@ -3,7 +3,12 @@ package com.microservice.learning.currency_conversion_service;
 import java.math.BigDecimal;
 import java.util.HashMap;
 
+import com.microservice.learning.currency_exchange_service.CurrencyExchange;
+import io.github.resilience4j.bulkhead.annotation.Bulkhead;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,7 +20,10 @@ public class CurrencyConversionController {
 
 	@Autowired
 	private CurrencyExchangeProxy currencyExchangeProxy;
-	
+
+	@Autowired
+	private Environment environment;
+
 	@GetMapping("/currency-conversion/from/{from}/to/{to}/quantity/{quantity}")
 	public CurrencyConversion calculateCurrency(@PathVariable String from, @PathVariable String to, @PathVariable BigDecimal quantity) {
 		HashMap<String, String> uriVariables= new HashMap<>();
