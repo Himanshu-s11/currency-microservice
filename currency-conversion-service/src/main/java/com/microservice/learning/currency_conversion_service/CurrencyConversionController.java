@@ -30,6 +30,8 @@ public class CurrencyConversionController {
 	}
 	
 	@GetMapping("/currency-conversion-feign/from/{from}/to/{to}/quantity/{quantity}")
+	@RateLimiter(name="default") //in 10s--> allow only 10000 call
+	@Bulkhead(name="default")
 	public CurrencyConversion calculateCurrencyFeign(@PathVariable String from,
 			@PathVariable String to, @PathVariable BigDecimal quantity) {
 		CurrencyConversion currencyConversion	=currencyExchangeProxy.retriveExchangeValue(from, to);
