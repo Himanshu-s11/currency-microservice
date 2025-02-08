@@ -1,0 +1,45 @@
+#spring:
+#  cloud:
+#    gateway:
+#      routes:
+#        - id: currency-exchange
+#          uri: lb://currency-exchange
+#          predicates:
+#            - Path=/currency-exchange/**
+#          filters:
+#              args:
+#                - name: currency-exchange
+#                - fallbackuri: forward:/currency-exchange-fallback
+##            - AuthenticationFilter (I want this filter execurte before callling currency-exchange service)
+#            - AddRequestHeader=Authorization,Bearer {jwt-token}
+#            - AddRequestHeader=role,ADMIN
+#          authorization: "hasAuthority('ROLE_ADMIN')"
+#
+#        - id: currency-conversion
+#          uri: lb://currency-conversion
+#          predicates:
+#            - Path=/currency-conversion/**
+#          filters:
+##            - AuthenticationFilter (I want this filter execurte before callling currency-covirsion service)
+#             - AddRequestHeader=Authorization,Bearer {jwt-token}
+#             - AddRequestHeader=role,USER
+#          authorization: "hasAuthority('ROLE_USER')"
+#
+#        - id: auth-service
+#          uri: lb://auth-service
+#          predicates:
+#            - Path=/auth/**
+
+#api documentation {dependecy not added}
+#springdoc:
+#  swagger-ui:
+#    urls:
+#      - name: User Service
+#        url: /user-service/v3/api-docs
+#      - name: Order Service
+#        url: /order-service/v3/api-docs
+#Basic Config ✅
+#👉 Microservices API Grouping ✅
+#👉 Custom Titles & Descriptions ✅
+#👉 Secure API Docs (Optional) ✅
+#👉 Exposing Docs via API Gateway ✅
