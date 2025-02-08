@@ -30,6 +30,7 @@ public class CurrencyConversionController {
 	}
 	
 	@GetMapping("/currency-conversion-feign/from/{from}/to/{to}/quantity/{quantity}")
+	@CircuitBreaker(name="currecyExchangeService", fallbackMethod = "currecyExchangeServiceFallback")
 	@RateLimiter(name="default") //in 10s--> allow only 10000 call
 	@Bulkhead(name="default")
 	public CurrencyConversion calculateCurrencyFeign(@PathVariable String from,
@@ -38,6 +39,15 @@ public class CurrencyConversionController {
 		return new CurrencyConversion(currencyConversion.getId(),from,to,
 				quantity,currencyConversion.getConvValue(),
 				quantity.multiply(currencyConversion.getConvValue()),currencyConversion.getEnv());
+	}
+
+	public CurrencyExchange currecyExchangeServiceFallback(Throwable t) {
+		CurrencyExchange currencyExchange=new CurrencyExchange();
+		currencyExchange.setFrom("INR");
+		currencyExchange.setTo("CAD");
+		currencyExchange.setConvValue(BigDecimal.ONE);
+		currencyExchange.setEnv(environment.getProperty("local.server.port"));
+		return currencyExchange;
 	}
 	
 		
